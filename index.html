@@ -1,53 +1,298 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>West Bengal Scheme Finder</title>
-<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+padding:20px;
+}
+
+.container{
+max-width:500px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+h2{
+text-align:center;
+}
+
+select,input,button{
+width:100%;
+padding:10px;
+margin:10px 0;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+button{
+background:#1976d2;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#0d47a1;
+}
+
+.scheme{
+background:#e3f2fd;
+padding:10px;
+margin-top:10px;
+border-radius:5px;
+cursor:pointer;
+}
+
+.details{
+display:none;
+background:#fff3e0;
+padding:10px;
+margin-top:5px;
+border-radius:5px;
+}
+
+</style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>West Bengal Scheme Finder</h1>
-
-<form id="schemeForm">
+<h2>West Bengal Scheme Finder</h2>
 
 <label>Gender</label>
+
 <select id="gender">
-<option value="">Select</option>
 <option value="male">Male</option>
 <option value="female">Female</option>
 </select>
 
 <label>Age</label>
-<input type="number" id="age">
+
+<input type="number" id="age" placeholder="Enter age">
 
 <label>Occupation</label>
+
 <select id="occupation">
-<option value="">Select</option>
+
 <option value="student">Student</option>
+
+<option value="worker">Worker</option>
+
 <option value="farmer">Farmer</option>
-<option value="unemployed">Unemployed</option>
+
 <option value="other">Other</option>
+
 </select>
 
 <label>BPL Card</label>
+
 <select id="bpl">
-<option value="no">No</option>
+
 <option value="yes">Yes</option>
+
+<option value="no">No</option>
+
 </select>
 
-<button type="submit">Check Schemes</button>
+<button onclick="checkSchemes()">
 
-</form>
+Check Schemes
 
-<div id="results"></div>
+</button>
+
+<div id="result"></div>
 
 </div>
 
-<script src="schemes.js"></script>
-<script src="script.js"></script>
+<script>
+
+const schemes=[
+
+{
+
+name:"Kanyashree Prakalpa",
+
+gender:"female",
+
+minAge:13,
+
+maxAge:25,
+
+occupation:"student",
+
+details:"Girls get financial assistance for education.",
+
+documents:"Aadhaar Card, School Certificate, Bank Account"
+
+},
+
+{
+
+name:"Rupashree Prakalpa",
+
+gender:"female",
+
+minAge:18,
+
+maxAge:40,
+
+occupation:"other",
+
+details:"₹25,000 assistance for marriage of poor girls.",
+
+documents:"Aadhaar Card, Income Certificate, Marriage Proof"
+
+},
+
+{
+
+name:"Swasthya Sathi",
+
+gender:"any",
+
+minAge:0,
+
+maxAge:100,
+
+occupation:"any",
+
+details:"Free health insurance up to ₹5 lakh.",
+
+documents:"Aadhaar Card, Ration Card"
+
+},
+
+{
+
+name:"Krishak Bandhu",
+
+gender:"any",
+
+minAge:18,
+
+maxAge:60,
+
+occupation:"farmer",
+
+details:"Financial support to farmers.",
+
+documents:"Land Documents, Aadhaar Card"
+
+},
+
+{
+
+name:"Jai Bangla Pension",
+
+gender:"any",
+
+minAge:60,
+
+maxAge:100,
+
+occupation:"any",
+
+details:"Monthly pension for elderly.",
+
+documents:"Aadhaar Card, Age Proof"
+
+}
+
+];
+
+function checkSchemes(){
+
+const gender=document.getElementById("gender").value;
+
+const age=parseInt(document.getElementById("age").value);
+
+const occupation=document.getElementById("occupation").value;
+
+const bpl=document.getElementById("bpl").value;
+
+const result=document.getElementById("result");
+
+result.innerHTML="";
+
+let found=false;
+
+schemes.forEach((scheme,i)=>{
+
+if(
+
+(scheme.gender=="any"||scheme.gender==gender)&&
+
+age>=scheme.minAge &&
+
+age<=scheme.maxAge &&
+
+(scheme.occupation=="any"||scheme.occupation==occupation)
+
+){
+
+found=true;
+
+const div=document.createElement("div");
+
+div.className="scheme";
+
+div.innerHTML=scheme.name;
+
+div.onclick=()=>toggleDetails(i);
+
+const details=document.createElement("div");
+
+details.className="details";
+
+details.id="details"+i;
+
+details.innerHTML=`
+
+<b>Details:</b> ${scheme.details} <br><br>
+
+<b>Documents Needed:</b> ${scheme.documents}
+
+`;
+
+result.appendChild(div);
+
+result.appendChild(details);
+
+}
+
+});
+
+if(!found){
+
+result.innerHTML="<p>No schemes found.</p>";
+
+}
+
+}
+
+function toggleDetails(i){
+
+const d=document.getElementById("details"+i);
+
+d.style.display=d.style.display==="block"?"none":"block";
+
+}
+
+</script>
 
 </body>
 </html>
